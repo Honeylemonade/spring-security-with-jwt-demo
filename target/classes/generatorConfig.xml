@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 一个数据库一个context -->
+    <context id="test_db" targetRuntime="MyBatis3">
+        <!--插件：当前插件表示entity对象生成时，附带tostring方法；更多方法请参考官方文档-->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!-- 注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
+            <property name="suppressDate" value="true" /> <!-- 是否生成注释代时间戳-->
+        </commentGenerator>
+
+        <!-- jdbc连接 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/test_db?serverTimezone=UTC"
+                        userId="root" password="159852" >
+            <!--这个property一定要有,这样才能使MBG绑定特定数据库，否则所有数据库中的表都会被扫描-->
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <!-- 生成实体类地址，对应entity -->
+        <javaModelGenerator targetPackage="com.xyp.springsecuritywithjwtdemo.entity" targetProject="src/main/java" >
+        </javaModelGenerator>
+        <!-- 生成map.xml文件 对应mapper.xml-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources" >
+        </sqlMapGenerator>
+        <!-- 生成map.xml对应client，也就是接口dao层接口-->
+        <javaClientGenerator targetPackage="com.xyp.springsecuritywithjwtdemo.dao" targetProject="src/main/java"
+                             type="XMLMAPPER" >
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        <!-- tableName表示要匹配的数据库表,table可以有多个,每个数据库中的表都可以写一个table，
+        也可以在tableName属性中通过使用%通配符来匹配所有数据库表,只有匹配的表才会自动生成文件，
+         后面很多被声明为false的属性可以使得不生成Blobs和Example一些乱七八糟的类和属性，更纯净-->
+        <table tableName="%" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <!-- 指定数据库表主键，方便生成map映射的SQL的方法，例如：根据主键查找，根据主键删除 -->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+    </context>
+</generatorConfiguration>

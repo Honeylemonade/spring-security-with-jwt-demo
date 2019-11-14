@@ -1,5 +1,6 @@
 package com.xyp.springsecuritywithjwtdemo.controller;
 
+import com.xyp.springsecuritywithjwtdemo.dao.UserMapper;
 import com.xyp.springsecuritywithjwtdemo.entity.User;
 import com.xyp.springsecuritywithjwtdemo.model.AuthenticationRequest;
 import com.xyp.springsecuritywithjwtdemo.model.AuthenticationResponse;
@@ -12,10 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * TestController:
@@ -23,12 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author XvYanpeng
  * @Date 2019/11/2 14:56
  */
+@CrossOrigin
 @RestController
 public class TestController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private MyUserDetailService userDetailsService;
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     private JWTUtil jwtTokenUtil;
@@ -36,11 +37,6 @@ public class TestController {
     @GetMapping("/hello")
     public String all() {
         return "<h1>hello</h1>";
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        return new ResponseEntity<>(new User("user","123"), HttpStatus.OK);
     }
 
     @PostMapping("/authentication")
@@ -52,10 +48,10 @@ public class TestController {
         } catch (Exception e) {
             throw new Exception("Incorrect userName or password");
         }
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUserName());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUserName());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
+
 }

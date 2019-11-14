@@ -29,19 +29,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JWTRequestFilter jwtRequestFilter;
 
-    //配置身份认证和角色
+    //配置角色身份认证
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsServcice);
     }
-    //配置http接口权限
-
-
+    //配置http接口权限管理
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 //允许某个api
-                .authorizeRequests().antMatchers("/test").permitAll()
+                .authorizeRequests().antMatchers("/authentication").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
